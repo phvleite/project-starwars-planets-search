@@ -1,40 +1,34 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import getStarWarsApi from '../services/StarWarsApi';
 import StarWarsContext from './StarWarsContext';
 
-class StarWarsProvider extends Component {
-  constructor() {
-    super();
-    this.state = {
-      dbStarWars: [],
-      error: '',
-    };
+function StarWarsProvider({ children }) {
+  const [dbStarWars, setDbStarWars] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  async function requestStarWarsData() {
+    setLoading(true);
+    const data = await getStarWarsApi();
+    setDbStarWars(data.results);
+    setLoading(false);
   }
 
-  requestStarWarsData = async () => {
-    try {
-      const data = await getStarWarsApi();
-      this.setState({
-        dbStarWars: [data],
-      });
-    } catch (error) {
-      this.setState({ error });
-    }
+  const contexValue = {
+    dbStarWars,
+    loading,
+    requestStarWarsData,
   };
 
-  render() {
-    const { Provider } = StarWarsContext;
-    const { children } = this.props;
-    return (
-      <Provider
-        value={ { ...this.state,
-          requestStarWarsData: this.requestStarWarsData,
-        } }
-      >
-        {children}
-      </Provider>
-    );
-  }
+  return (
+    <StarWarsContext.Provider value={ contexValue }>
+      { children }
+    </StarWarsContext.Provider>
+  );
 }
+
+StarWarsProvider.propTypes = {
+  children: PropTypes.node.isRequired,
+};
 
 export default StarWarsProvider;
