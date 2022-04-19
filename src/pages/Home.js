@@ -1,9 +1,29 @@
-import React from 'react';
-import ManipulatingStarWars from '../components/ManipulatingStarWars';
+import React, { useContext, useEffect } from 'react';
+import StarWarsContext from '../context/StarWarsContext';
+import TableStarWars from '../components/TableStarWars';
 
 function Home() {
+  const {
+    dbStarWars,
+    requestStarWarsData,
+    loading,
+  } = useContext(StarWarsContext);
+
+  useEffect(() => {
+    requestStarWarsData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    console.log(dbStarWars);
+  }, [dbStarWars]);
+
   return (
-    <ManipulatingStarWars />
+    <main>
+      { loading ? (<h1>Carregando...</h1>) : (
+        <TableStarWars />
+      )}
+    </main>
   );
 }
 
