@@ -8,13 +8,51 @@ function StarWarsProvider({ children }) {
   const [loading, setLoading] = useState(false);
   const [filterByName, setFilterByName] = useState('');
   const [dbFilterByName, setDbFilterByName] = useState([]);
+  const [column, setColumn] = useState('population');
+  const [comparison, setComparison] = useState('maior que');
+  const [valueNumber, setValueNumber] = useState(0);
+
+  // solução encontrada nesta página: (https://ourcodeworld.com/articles/read/764/how-to-sort-alphabetically-an-array-of-objects-by-key-in-javascript)
+  function dynamicSort(property) {
+    let sortOrder = 1;
+    const oneLess = -1;
+
+    if (property[0] === '-') {
+      sortOrder = oneLess;
+      property = property.substr(1);
+    }
+
+    return ((a, b) => {
+      if (sortOrder === oneLess) {
+        return b[property].localeCompare(a[property]);
+      }
+      return a[property].localeCompare(b[property]);
+    });
+  }
 
   async function requestStarWarsData() {
     setLoading(true);
     const data = await getStarWarsApi();
-    setDbStarWars(data.results);
-    setDbFilterByName(data.results);
+    const dataSort = data.results.sort(dynamicSort('name'));
+    setDbStarWars(dataSort);
+    setDbFilterByName(dataSort);
     setLoading(false);
+  }
+
+  function getDataToFilter({ target }) {
+    const { name, value } = target;
+    switch (name) {
+    case 'column':
+      setColumn(value);
+      break;
+    case 'comparison':
+      setComparison(value);
+      break;
+    case 'valueNumber':
+      setValueNumber(value);
+      break;
+    default:
+    }
   }
 
   function filterDataByName(value) {
@@ -27,8 +65,6 @@ function StarWarsProvider({ children }) {
     setLoading(false);
   }
 
-  // .slice(0, lenFilter).toLowerCase() === value.toLowerCase())
-
   function getFilterByName({ target }) {
     const { value } = target;
     setFilterByName(value);
@@ -40,9 +76,13 @@ function StarWarsProvider({ children }) {
     loading,
     filterByName,
     dbFilterByName,
+    column,
+    comparison,
+    valueNumber,
     requestStarWarsData,
     filterDataByName,
     getFilterByName,
+    getDataToFilter,
   };
 
   return (

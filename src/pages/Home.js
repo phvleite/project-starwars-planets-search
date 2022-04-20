@@ -8,6 +8,10 @@ function Home() {
     loading,
     filterByName,
     getFilterByName,
+    getDataToFilter,
+    column,
+    comparison,
+    valueNumber,
   } = useContext(StarWarsContext);
 
   useEffect(() => {
@@ -37,6 +41,7 @@ function Home() {
           <input
             id="input-filter-name"
             data-testid="name-filter"
+            name="name-filter"
             type="text"
             value={ filterByName }
             onChange={ getFilterByName }
@@ -50,8 +55,9 @@ function Home() {
           <select
             id="column-filter"
             data-testid="column-filter"
-            // value={ filterByName }
-            // onChange={ getFilterByName }
+            name="column"
+            value={ column }
+            onChange={ getDataToFilter }
           >
             {selectedColumn.map((select) => (
               <option key={ select } value={ select }>{select}</option>
@@ -63,8 +69,9 @@ function Home() {
           <select
             id="comparison-filter"
             data-testid="comparison-filter"
-            // value={ filterByName }
-            // onChange={ getFilterByName }
+            name="comparison"
+            value={ comparison }
+            onChange={ getDataToFilter }
           >
             {selectedOperator.map((select) => (
               <option key={ select } value={ select }>{select}</option>
@@ -76,9 +83,10 @@ function Home() {
           <input
             id="value-filter"
             data-testid="value-filter"
+            name="valueNumber"
             type="number"
-            // value={ filterByName }
-            // onChange={ getFilterByName }
+            value={ valueNumber }
+            onChange={ getDataToFilter }
           />
         </label>
         <button
