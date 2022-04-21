@@ -12,6 +12,7 @@ function Home() {
     column,
     comparison,
     valueNumber,
+    filterByNumericValues,
   } = useContext(StarWarsContext);
 
   useEffect(() => {
@@ -93,7 +94,7 @@ function Home() {
           data-testid="button-filter"
           className="button-filter"
           type="button"
-          // onClick={ this.deleteExpense }
+          onClick={ filterByNumericValues }
         >
           Filtrar
         </button>

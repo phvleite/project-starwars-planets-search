@@ -19,16 +19,17 @@ const headerTableStarWars = [
 
 function TableStarWars() {
   const { dbFilterByName } = useContext(StarWarsContext);
+  const filmsStarWars = dbFilterByName.map((planet) => planet.films);
   return (
     <table>
       <tbody>
-        <tr>
+        <tr className="header-line">
           { headerTableStarWars.map((header, ind) => (
             <th key={ ind }>{ header }</th>
           )) }
         </tr>
         { dbFilterByName.map((planet, ind) => (
-          <tr key={ ind }>
+          <tr key={ ind } className="data-line">
             <td>{ planet.name }</td>
             <td>{ planet.rotation_period }</td>
             <td>{ planet.orbital_period }</td>
@@ -38,10 +39,32 @@ function TableStarWars() {
             <td>{ planet.terrain }</td>
             <td>{ planet.surface_water }</td>
             <td>{ planet.population }</td>
-            <td>{ planet.films }</td>
+            <td>
+              { filmsStarWars[ind].map((planetFilm, idx) => (
+                <p
+                  key={ `${planet.name}-${idx}` }
+                >
+                  <a
+                    href={ planetFilm }
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    { planetFilm }
+                  </a>
+                </p>
+              ))}
+            </td>
             <td>{ planet.created }</td>
             <td>{ planet.edited }</td>
-            <td>{ planet.url }</td>
+            <td>
+              <a
+                href={ planet.url }
+                target="_blank"
+                rel="noreferrer"
+              >
+                { planet.url }
+              </a>
+            </td>
           </tr>
         ))}
       </tbody>

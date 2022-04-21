@@ -49,7 +49,7 @@ function StarWarsProvider({ children }) {
       setComparison(value);
       break;
     case 'valueNumber':
-      setValueNumber(value);
+      setValueNumber(parseInt(value, 10));
       break;
     default:
     }
@@ -61,6 +61,27 @@ function StarWarsProvider({ children }) {
     const filterData = dbStarWars.filter((planet) => planet.name
       .toLowerCase().indexOf(value.toLowerCase()) !== INDEX_OF)
       .map((planet) => planet);
+    setDbFilterByName(filterData);
+    setLoading(false);
+  }
+
+  function filterByNumericValues() {
+    console.log(valueNumber, typeof valueNumber);
+    setLoading(true);
+    let filterData;
+    if (comparison === 'maior que') {
+      filterData = dbStarWars
+        .filter((planet) => parseInt(planet[column], 10) > valueNumber)
+        .map((planet) => planet);
+    } else if (comparison === 'menor que') {
+      filterData = dbStarWars
+        .filter((planet) => parseInt(planet[column], 10) < valueNumber)
+        .map((planet) => planet);
+    } else if (comparison === 'igual a') {
+      filterData = dbStarWars
+        .filter((planet) => parseInt(planet[column], 10) === valueNumber)
+        .map((planet) => planet);
+    }
     setDbFilterByName(filterData);
     setLoading(false);
   }
@@ -83,6 +104,7 @@ function StarWarsProvider({ children }) {
     filterDataByName,
     getFilterByName,
     getDataToFilter,
+    filterByNumericValues,
   };
 
   return (
