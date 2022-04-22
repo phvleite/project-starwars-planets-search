@@ -34,7 +34,7 @@ function TableStarWars() {
       <tbody>
         <tr className="header-line">
           { headerTableStarWars.map((header, ind) => (
-            <th key={ ind }>{ header }</th>
+            <th key={ `${header}-${ind}` }>{ header }</th>
           )) }
         </tr>
         { dbFilterByName.map((planet, ind) => (

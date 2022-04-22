@@ -12,7 +12,7 @@ function StarWarsProvider({ children }) {
   const [comparison, setComparison] = useState('maior que');
   const [valueNumber, setValueNumber] = useState(0);
   const [dbTitleFilms, setDbTitleFilms] = useState([]);
-  // const [filterByNumericValues, setFilterByNumericValues] = useState([]);
+  const [filterByNumericValues, setFilterByNumericValues] = useState([]);
   // const [dbFilter, setDbFilter] = useState([]);
 
   // solução encontrada nesta página: (https://ourcodeworld.com/articles/read/764/how-to-sort-alphabetically-an-array-of-objects-by-key-in-javascript)
@@ -78,7 +78,8 @@ function StarWarsProvider({ children }) {
   }
 
   function getfilterByNumericValues() {
-    console.log(valueNumber, typeof valueNumber);
+    setFilterByNumericValues([...filterByNumericValues,
+      { column, comparison, valueNumber }]);
     setLoading(true);
     let filterData;
     if (comparison === 'maior que') {
@@ -113,6 +114,7 @@ function StarWarsProvider({ children }) {
     comparison,
     valueNumber,
     dbTitleFilms,
+    filterByNumericValues,
     requestFilmsStarWarsData,
     requestStarWarsData,
     filterDataByName,

@@ -4,6 +4,7 @@ import TableStarWars from '../components/TableStarWars';
 
 function Home() {
   const {
+    filterByNumericValues,
     dbTitleFilms,
     requestStarWarsData,
     requestFilmsStarWarsData,
@@ -110,6 +111,23 @@ function Home() {
           Filtrar
         </button>
       </section>
+      { filterByNumericValues.length > 0
+        ? filterByNumericValues.map((filter, ind) => (
+          <div key={ ind }>
+            <p>
+              {`Filtro: ${filter.column} ${filter.comparison} ${filter.valueNumber}`}
+            </p>
+            <button
+              // data-testid="button-filter"
+              // className="button-filter"
+              type="button"
+              // onClick={ getfilterByNumericValues }
+            >
+              Excluir
+            </button>
+          </div>
+        ))
+        : '' }
       { loading ? (<h1>Carregando...</h1>) : (
         <TableStarWars />
       )}
