@@ -18,8 +18,17 @@ const headerTableStarWars = [
 ];
 
 function TableStarWars() {
-  const { dbFilterByName } = useContext(StarWarsContext);
+  const { dbFilterByName, dbTitleFilms } = useContext(StarWarsContext);
   const filmsStarWars = dbFilterByName.map((planet) => planet.films);
+  const INI = 44;
+  const FIN = 45;
+
+  // if (filmsStarWars.length > 0) {
+  //   filmsStarWars
+  //     .forEach((film) => (
+  //       film.forEach((f) => (console.log(dbTitleFilms[(f.slice(INI, FIN)) - 1])))));
+  // }
+
   return (
     <table>
       <tbody>
@@ -41,16 +50,8 @@ function TableStarWars() {
             <td>{ planet.population }</td>
             <td>
               { filmsStarWars[ind].map((planetFilm, idx) => (
-                <p
-                  key={ `${planet.name}-${idx}` }
-                >
-                  <a
-                    href={ planetFilm }
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    { planetFilm }
-                  </a>
+                <p key={ `${planet.name}-${idx}` }>
+                  { dbTitleFilms[planetFilm.slice(INI, FIN) - 1] }
                 </p>
               ))}
             </td>

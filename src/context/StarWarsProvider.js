@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import getStarWarsApi from '../services/StarWarsApi';
+import { getStarWarsApi, getStarWarsFilmsApi } from '../services/StarWarsApi';
 import StarWarsContext from './StarWarsContext';
 
 function StarWarsProvider({ children }) {
@@ -11,6 +11,9 @@ function StarWarsProvider({ children }) {
   const [column, setColumn] = useState('population');
   const [comparison, setComparison] = useState('maior que');
   const [valueNumber, setValueNumber] = useState(0);
+  const [dbTitleFilms, setDbTitleFilms] = useState([]);
+  // const [filterByNumericValues, setFilterByNumericValues] = useState([]);
+  // const [dbFilter, setDbFilter] = useState([]);
 
   // solução encontrada nesta página: (https://ourcodeworld.com/articles/read/764/how-to-sort-alphabetically-an-array-of-objects-by-key-in-javascript)
   function dynamicSort(property) {
@@ -36,6 +39,15 @@ function StarWarsProvider({ children }) {
     const dataSort = data.results.sort(dynamicSort('name'));
     setDbStarWars(dataSort);
     setDbFilterByName(dataSort);
+    setLoading(false);
+  }
+
+  async function requestFilmsStarWarsData() {
+    setLoading(true);
+    const data = await getStarWarsFilmsApi();
+    const titleFilms = data.results;
+    const titles = titleFilms.map((film) => film.title);
+    setDbTitleFilms(titles);
     setLoading(false);
   }
 
@@ -65,7 +77,7 @@ function StarWarsProvider({ children }) {
     setLoading(false);
   }
 
-  function filterByNumericValues() {
+  function getfilterByNumericValues() {
     console.log(valueNumber, typeof valueNumber);
     setLoading(true);
     let filterData;
@@ -100,11 +112,13 @@ function StarWarsProvider({ children }) {
     column,
     comparison,
     valueNumber,
+    dbTitleFilms,
+    requestFilmsStarWarsData,
     requestStarWarsData,
     filterDataByName,
     getFilterByName,
     getDataToFilter,
-    filterByNumericValues,
+    getfilterByNumericValues,
   };
 
   return (

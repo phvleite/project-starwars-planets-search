@@ -4,7 +4,9 @@ import TableStarWars from '../components/TableStarWars';
 
 function Home() {
   const {
+    dbTitleFilms,
     requestStarWarsData,
+    requestFilmsStarWarsData,
     loading,
     filterByName,
     getFilterByName,
@@ -12,13 +14,22 @@ function Home() {
     column,
     comparison,
     valueNumber,
-    filterByNumericValues,
+    getfilterByNumericValues,
   } = useContext(StarWarsContext);
 
   useEffect(() => {
     requestStarWarsData();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    requestFilmsStarWarsData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    // console.log(dbTitleFilms);
+  }, [dbTitleFilms]);
 
   const selectedColumn = [
     'population',
@@ -94,7 +105,7 @@ function Home() {
           data-testid="button-filter"
           className="button-filter"
           type="button"
-          onClick={ filterByNumericValues }
+          onClick={ getfilterByNumericValues }
         >
           Filtrar
         </button>
