@@ -1,6 +1,8 @@
 import React, { useContext, useEffect } from 'react';
 import StarWarsContext from '../context/StarWarsContext';
 import TableStarWars from '../components/TableStarWars';
+import StarWarsPlanetImg from '../images/star-wars-planets-search.png';
+import '../css/Home.css';
 
 function Home() {
   const {
@@ -17,6 +19,7 @@ function Home() {
     valueNumber,
     getFilterByNumericValues,
     removeFilterByNumericValues,
+    removeAllFilterByNumericValues,
   } = useContext(StarWarsContext);
 
   useEffect(() => {
@@ -41,12 +44,13 @@ function Home() {
     'surface_water',
   ];
 
+  const isDisabled = filterByNumericValues.length === 0;
+
   const selectedColumnFilter = [...selectedColumn];
   if (filterByNumericValues.length > 0) {
     filterByNumericValues.forEach((elem) => {
       selectedColumnFilter.splice(selectedColumnFilter.indexOf(elem.column), 1);
     });
-    console.log(selectedColumnFilter);
   }
 
   const selectedOperator = [
@@ -57,6 +61,7 @@ function Home() {
 
   return (
     <main>
+      <img src={ StarWarsPlanetImg } alt="Logo Star Wars Planet Searchs" />
       <section className="box-filter-name">
         <label htmlFor="input-filter-name">
           Projeto Star Wars - Trybe
@@ -119,25 +124,36 @@ function Home() {
         >
           Filtrar
         </button>
+        <button
+          data-testid="button-remove-filters"
+          className="button-filter"
+          type="button"
+          disabled={ isDisabled }
+          onClick={ removeAllFilterByNumericValues }
+        >
+          Remover Filtros
+        </button>
       </section>
-      { filterByNumericValues.length > 0
-        ? filterByNumericValues.map((filter, ind) => (
-          <div key={ ind }>
-            <p>
-              {`Filtro: ${filter.column} ${filter.comparison} ${filter.valueNumber}`}
-            </p>
-            <button
-              // data-testid="button-filter"
-              // className="button-filter"
-              type="button"
-              value={ ind }
-              onClick={ removeFilterByNumericValues }
-            >
-              Excluir
-            </button>
-          </div>
-        ))
-        : '' }
+      <section className="box-numeric-filters">
+        { filterByNumericValues.length > 0
+          ? filterByNumericValues.map((filter, ind) => (
+            <div key={ ind } className="box-numeric-filter">
+              <p>
+                {`Filtro: ${filter.column} ${filter.comparison} ${filter.valueNumber}`}
+              </p>
+              <button
+                data-testid="filter"
+                // className="button-filter"
+                type="button"
+                value={ ind }
+                onClick={ removeFilterByNumericValues }
+              >
+                X
+              </button>
+            </div>
+          ))
+          : '' }
+      </section>
       { loading ? (<h1>Carregando...</h1>) : (
         <TableStarWars />
       )}

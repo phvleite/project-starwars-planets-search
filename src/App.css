@@ -1,7 +1,11 @@
 * {
+  box-sizing: border-box;
+  color: rgb(51, 107, 222);
   font-family: Oswald , Fira Sans , Droid Sans , Helvetica Neue , sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  margin: 0;
+  padding: 0;
 }
 
 .App {

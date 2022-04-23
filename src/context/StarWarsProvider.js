@@ -175,6 +175,21 @@ function StarWarsProvider({ children }) {
   function removeFilterByNumericValues({ target }) {
     const { value } = target;
     filterByNumericValues.splice(value, 1);
+    if (filterByNumericValues.length === 0) {
+      setColumn('population');
+      setComparison('maior que');
+      setValueNumber(0);
+      filterDataByName(filterByName);
+    } else {
+      getAllFilterByNumericValues(filterByNumericValues);
+    }
+  }
+
+  function removeAllFilterByNumericValues() {
+    filterByNumericValues.splice(0, filterByNumericValues.length);
+    setColumn('population');
+    setComparison('maior que');
+    setValueNumber(0);
     filterDataByName(filterByName);
   }
 
@@ -201,6 +216,7 @@ function StarWarsProvider({ children }) {
     getDataToFilter,
     getFilterByNumericValues,
     removeFilterByNumericValues,
+    removeAllFilterByNumericValues,
   };
 
   return (

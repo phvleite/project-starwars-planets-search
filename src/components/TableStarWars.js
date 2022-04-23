@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
 import StarWarsContext from '../context/StarWarsContext';
+import '../css/TableStarWars.css';
 
 const headerTableStarWars = [
   'Name',

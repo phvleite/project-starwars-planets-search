@@ -1,0 +1,31 @@
+table {
+  margin-bottom: 40px;
+  width: 1300px;
+}
+
+.header-line {
+  background-color: rgb(51, 107, 222);
+}
+
+.header-line th {
+  border-radius: 5px;
+  color: white;
+  font-size: 0.85rem;
+  font-weight: 400;
+  padding: 2px;
+}
+
+.data-line {
+  background-color: rgba(51, 107, 222, 0.15);
+}
+
+.data-line:nth-child( 2n ) {
+  background-color: rgba(51, 107, 222, 0.25);
+}
+
+.data-line td {
+  border-radius: 5px;
+  font-size: 0.75rem;
+  padding: 2px;
+  text-align: center;
+}
