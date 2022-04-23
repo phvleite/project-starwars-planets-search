@@ -13,7 +13,6 @@ function StarWarsProvider({ children }) {
   const [valueNumber, setValueNumber] = useState(0);
   const [dbTitleFilms, setDbTitleFilms] = useState([]);
   const [filterByNumericValues, setFilterByNumericValues] = useState([]);
-  // const [dbFilter, setDbFilter] = useState([]);
 
   // solução encontrada nesta página: (https://ourcodeworld.com/articles/read/764/how-to-sort-alphabetically-an-array-of-objects-by-key-in-javascript)
   function dynamicSort(property) {
@@ -51,6 +50,47 @@ function StarWarsProvider({ children }) {
     setLoading(false);
   }
 
+  function allFilterByNumericValues(col, comp, valNumber, ind) {
+    let filterData;
+    if (ind === 0) {
+      if (comp === 'maior que') {
+        filterData = dbStarWars
+          .filter((planet) => parseInt(planet[col], 10) > valNumber)
+          .map((planet) => planet);
+      } else if (comp === 'menor que') {
+        filterData = dbStarWars
+          .filter((planet) => parseInt(planet[col], 10) < valNumber)
+          .map((planet) => planet);
+      } else if (comp === 'igual a') {
+        filterData = dbStarWars
+          .filter((planet) => parseInt(planet[col], 10) === valNumber)
+          .map((planet) => planet);
+      }
+    } else if (ind > 0) {
+      if (comp === 'maior que') {
+        filterData = dbFilterByName
+          .filter((planet) => parseInt(planet[col], 10) > valNumber)
+          .map((planet) => planet);
+      } else if (comp === 'menor que') {
+        filterData = dbFilterByName
+          .filter((planet) => parseInt(planet[col], 10) < valNumber)
+          .map((planet) => planet);
+      } else if (comp === 'igual a') {
+        filterData = dbFilterByName
+          .filter((planet) => parseInt(planet[col], 10) === valNumber)
+          .map((planet) => planet);
+      }
+    }
+    setDbFilterByName(filterData);
+  }
+
+  function getAllFilterByNumericValues(DataNumeric) {
+    const filterDataNumeric = [...DataNumeric];
+    filterDataNumeric.forEach((filter, ind) => {
+      allFilterByNumericValues(filter.column, filter.comparison, filter.valueNumber, ind);
+    });
+  }
+
   function getDataToFilter({ target }) {
     const { name, value } = target;
     switch (name) {
@@ -68,35 +108,74 @@ function StarWarsProvider({ children }) {
   }
 
   function filterDataByName(value) {
+    console.log(filterByNumericValues.length);
     setLoading(true);
     const INDEX_OF = -1;
+    // let filterData;
+
+    // if (filterByNumericValues.length > 0) {
+    //   getAllFilterByNumericValues(filterByNumericValues);
+    // }
+
     const filterData = dbStarWars.filter((planet) => planet.name
       .toLowerCase().indexOf(value.toLowerCase()) !== INDEX_OF)
       .map((planet) => planet);
+
+    // if (filterByNumericValues.length === 0) {
+    //   filterData = dbStarWars.filter((planet) => planet.name
+    //     .toLowerCase().indexOf(value.toLowerCase()) !== INDEX_OF)
+    //     .map((planet) => planet);
+    // } else if (filterByNumericValues.length > 0 && dbFilterByName.length === 0) {
+    //   filterData = dbStarWars.filter((planet) => planet.name
+    //     .toLowerCase().indexOf(value.toLowerCase()) !== INDEX_OF)
+    //     .map((planet) => planet);
+    //   setDbFilterByName(filterData);
+    //   getAllFilterByNumericValues(filterByNumericValues);
+    // } else {
+    //   filterData = dbFilterByName.filter((planet) => planet.name
+    //     .toLowerCase().indexOf(value.toLowerCase()) !== INDEX_OF)
+    //     .map((planet) => planet);
+    // }
+
     setDbFilterByName(filterData);
     setLoading(false);
   }
 
-  function getfilterByNumericValues() {
-    setFilterByNumericValues([...filterByNumericValues,
-      { column, comparison, valueNumber }]);
+  function getFilterByNumericValues() {
     setLoading(true);
-    let filterData;
-    if (comparison === 'maior que') {
-      filterData = dbStarWars
-        .filter((planet) => parseInt(planet[column], 10) > valueNumber)
-        .map((planet) => planet);
-    } else if (comparison === 'menor que') {
-      filterData = dbStarWars
-        .filter((planet) => parseInt(planet[column], 10) < valueNumber)
-        .map((planet) => planet);
-    } else if (comparison === 'igual a') {
-      filterData = dbStarWars
-        .filter((planet) => parseInt(planet[column], 10) === valueNumber)
-        .map((planet) => planet);
+    const filterDataNumeric = [...filterByNumericValues];
+    if (filterByNumericValues.length > 0) {
+      const found = filterByNumericValues.find((elem) => elem.column === column);
+      if (found) {
+        filterByNumericValues.forEach((filter, ind) => {
+          if (filter.column === column) {
+            setFilterByNumericValues(
+              [filterByNumericValues[ind] = { column, comparison, valueNumber }],
+              filterDataNumeric[ind] = { column, comparison, valueNumber },
+            );
+          }
+        });
+      } else {
+        setFilterByNumericValues([...filterByNumericValues,
+          { column, comparison, valueNumber }]);
+        filterDataNumeric.push(...filterByNumericValues,
+          { column, comparison, valueNumber });
+      }
+    } else {
+      setFilterByNumericValues([...filterByNumericValues,
+        { column, comparison, valueNumber }]);
+      filterDataNumeric.push(...filterByNumericValues,
+        { column, comparison, valueNumber });
     }
-    setDbFilterByName(filterData);
+
+    getAllFilterByNumericValues(filterDataNumeric);
     setLoading(false);
+  }
+
+  function removeFilterByNumericValues({ target }) {
+    const { value } = target;
+    filterByNumericValues.splice(value, 1);
+    filterDataByName(filterByName);
   }
 
   function getFilterByName({ target }) {
@@ -120,7 +199,8 @@ function StarWarsProvider({ children }) {
     filterDataByName,
     getFilterByName,
     getDataToFilter,
-    getfilterByNumericValues,
+    getFilterByNumericValues,
+    removeFilterByNumericValues,
   };
 
   return (

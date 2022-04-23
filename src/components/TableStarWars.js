@@ -57,15 +57,7 @@ function TableStarWars() {
             </td>
             <td>{ planet.created }</td>
             <td>{ planet.edited }</td>
-            <td>
-              <a
-                href={ planet.url }
-                target="_blank"
-                rel="noreferrer"
-              >
-                { planet.url }
-              </a>
-            </td>
+            <td>{ planet.url }</td>
           </tr>
         ))}
       </tbody>

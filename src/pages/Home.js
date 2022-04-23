@@ -15,7 +15,8 @@ function Home() {
     column,
     comparison,
     valueNumber,
-    getfilterByNumericValues,
+    getFilterByNumericValues,
+    removeFilterByNumericValues,
   } = useContext(StarWarsContext);
 
   useEffect(() => {
@@ -39,6 +40,14 @@ function Home() {
     'rotation_period',
     'surface_water',
   ];
+
+  const selectedColumnFilter = [...selectedColumn];
+  if (filterByNumericValues.length > 0) {
+    filterByNumericValues.forEach((elem) => {
+      selectedColumnFilter.splice(selectedColumnFilter.indexOf(elem.column), 1);
+    });
+    console.log(selectedColumnFilter);
+  }
 
   const selectedOperator = [
     'maior que',
@@ -72,7 +81,7 @@ function Home() {
             value={ column }
             onChange={ getDataToFilter }
           >
-            {selectedColumn.map((select) => (
+            {selectedColumnFilter.map((select) => (
               <option key={ select } value={ select }>{select}</option>
             ))}
           </select>
@@ -106,7 +115,7 @@ function Home() {
           data-testid="button-filter"
           className="button-filter"
           type="button"
-          onClick={ getfilterByNumericValues }
+          onClick={ getFilterByNumericValues }
         >
           Filtrar
         </button>
@@ -121,7 +130,8 @@ function Home() {
               // data-testid="button-filter"
               // className="button-filter"
               type="button"
-              // onClick={ getfilterByNumericValues }
+              value={ ind }
+              onClick={ removeFilterByNumericValues }
             >
               Excluir
             </button>
