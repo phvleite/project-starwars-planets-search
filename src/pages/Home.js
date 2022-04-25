@@ -152,12 +152,11 @@ function Home() {
       <section className="box-numeric-filters">
         { filterByNumericValues.length > 0
           ? filterByNumericValues.map((filter, ind) => (
-            <div key={ ind } className="box-numeric-filter">
+            <div key={ ind } className="box-numeric-filter" data-testid="filter">
               <p>
                 {`Filtro: ${filter.column} ${filter.comparison} ${filter.valueNumber}`}
               </p>
               <button
-                data-testid="filter"
                 type="button"
                 value={ ind }
                 onClick={ removeFilterByNumericValues }

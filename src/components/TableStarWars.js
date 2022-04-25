@@ -56,7 +56,7 @@ function TableStarWars() {
             <td>{ planet.terrain }</td>
             <td>{ planet.surface_water }</td>
             <td>{ planet.population }</td>
-            <td>
+            <td className="cell-films">
               { filmsStarWars[ind].map((planetFilm, idx) => (
                 <p key={ `${planet.name}-${idx}` }>
                   { dbTitleFilms[planetFilm.slice(INI, FIN) - 1] }

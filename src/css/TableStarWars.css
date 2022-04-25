@@ -12,6 +12,7 @@ table {
   color: white;
   font-size: 0.85rem;
   font-weight: 400;
+  height: 50px;
   padding: 2px;
 }
 
@@ -29,4 +30,8 @@ table {
   height: 80px;
   padding: 2px;
   text-align: center;
+}
+
+.cell-films {
+  width: 120px;
 }
