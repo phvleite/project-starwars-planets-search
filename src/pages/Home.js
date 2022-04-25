@@ -7,11 +7,11 @@ import '../css/Home.css';
 function Home() {
   const {
     filterByNumericValues,
-    dbTitleFilms,
     requestStarWarsData,
     requestFilmsStarWarsData,
     loading,
     filterByName,
+    filterDataByName,
     getFilterByName,
     getDataToFilter,
     column,
@@ -20,6 +20,7 @@ function Home() {
     getFilterByNumericValues,
     removeFilterByNumericValues,
     removeAllFilterByNumericValues,
+    getAllFilterByNumericValues,
   } = useContext(StarWarsContext);
 
   useEffect(() => {
@@ -33,8 +34,14 @@ function Home() {
   }, []);
 
   useEffect(() => {
-    // console.log(dbTitleFilms);
-  }, [dbTitleFilms]);
+    filterDataByName();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filterByName]);
+
+  useEffect(() => {
+    getAllFilterByNumericValues();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filterByNumericValues]);
 
   const selectedColumn = [
     'population',
@@ -45,6 +52,14 @@ function Home() {
   ];
 
   const isDisabled = filterByNumericValues.length === 0;
+
+  let classButtonRemove = '';
+
+  if (isDisabled) {
+    classButtonRemove = 'button-filter-disabled';
+  } else {
+    classButtonRemove = 'button-filter';
+  }
 
   const selectedColumnFilter = [...selectedColumn];
   if (filterByNumericValues.length > 0) {
@@ -126,7 +141,7 @@ function Home() {
         </button>
         <button
           data-testid="button-remove-filters"
-          className="button-filter"
+          className={ classButtonRemove }
           type="button"
           disabled={ isDisabled }
           onClick={ removeAllFilterByNumericValues }
@@ -143,7 +158,6 @@ function Home() {
               </p>
               <button
                 data-testid="filter"
-                // className="button-filter"
                 type="button"
                 value={ ind }
                 onClick={ removeFilterByNumericValues }

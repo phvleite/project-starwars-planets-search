@@ -23,6 +23,13 @@ function TableStarWars() {
   const filmsStarWars = dbFilterByName.map((planet) => planet.films);
   const INI = 44;
   const FIN = 45;
+  const FIN_DTA = 10;
+
+  const dbDtCreated = dbFilterByName
+    .map((planet) => planet.created.slice(0, FIN_DTA).split('-'));
+
+  const dbDtEdited = dbFilterByName
+    .map((planet) => planet.edited.slice(0, FIN_DTA).split('-'));
 
   // if (filmsStarWars.length > 0) {
   //   filmsStarWars
@@ -56,8 +63,16 @@ function TableStarWars() {
                 </p>
               ))}
             </td>
-            <td>{ planet.created }</td>
-            <td>{ planet.edited }</td>
+            <td>
+              {
+                `${dbDtCreated[ind][2]}/${dbDtCreated[ind][1]}/${dbDtCreated[ind][0]}`
+              }
+            </td>
+            <td>
+              {
+                `${dbDtEdited[ind][2]}/${dbDtEdited[ind][1]}/${dbDtEdited[ind][0]}`
+              }
+            </td>
             <td>{ planet.url }</td>
           </tr>
         ))}

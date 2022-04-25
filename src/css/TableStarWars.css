@@ -26,6 +26,7 @@ table {
 .data-line td {
   border-radius: 5px;
   font-size: 0.75rem;
+  height: 80px;
   padding: 2px;
   text-align: center;
 }

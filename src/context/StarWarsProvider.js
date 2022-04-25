@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import { getStarWarsApi, getStarWarsFilmsApi } from '../services/StarWarsApi';
 import StarWarsContext from './StarWarsContext';
 
+let filterDataNext = [];
+
 function StarWarsProvider({ children }) {
   const [dbStarWars, setDbStarWars] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -52,6 +54,7 @@ function StarWarsProvider({ children }) {
 
   function allFilterByNumericValues(col, comp, valNumber, ind) {
     let filterData;
+    const lenData = filterByNumericValues.length;
     if (ind === 0) {
       if (comp === 'maior que') {
         filterData = dbStarWars
@@ -68,25 +71,29 @@ function StarWarsProvider({ children }) {
       }
     } else if (ind > 0) {
       if (comp === 'maior que') {
-        filterData = dbFilterByName
+        filterData = filterDataNext
           .filter((planet) => parseInt(planet[col], 10) > valNumber)
           .map((planet) => planet);
       } else if (comp === 'menor que') {
-        filterData = dbFilterByName
+        filterData = filterDataNext
           .filter((planet) => parseInt(planet[col], 10) < valNumber)
           .map((planet) => planet);
       } else if (comp === 'igual a') {
-        filterData = dbFilterByName
+        filterData = filterDataNext
           .filter((planet) => parseInt(planet[col], 10) === valNumber)
           .map((planet) => planet);
       }
     }
+    if (ind + 1 === lenData) {
+      filterDataNext = [];
+    } else {
+      filterDataNext = [...filterData];
+    }
     setDbFilterByName(filterData);
   }
 
-  function getAllFilterByNumericValues(DataNumeric) {
-    const filterDataNumeric = [...DataNumeric];
-    filterDataNumeric.forEach((filter, ind) => {
+  function getAllFilterByNumericValues() {
+    filterByNumericValues.forEach((filter, ind) => {
       allFilterByNumericValues(filter.column, filter.comparison, filter.valueNumber, ind);
     });
   }
@@ -107,35 +114,13 @@ function StarWarsProvider({ children }) {
     }
   }
 
-  function filterDataByName(value) {
-    console.log(filterByNumericValues.length);
+  function filterDataByName() {
     setLoading(true);
     const INDEX_OF = -1;
-    // let filterData;
-
-    // if (filterByNumericValues.length > 0) {
-    //   getAllFilterByNumericValues(filterByNumericValues);
-    // }
 
     const filterData = dbStarWars.filter((planet) => planet.name
-      .toLowerCase().indexOf(value.toLowerCase()) !== INDEX_OF)
+      .toLowerCase().indexOf(filterByName.toLowerCase()) !== INDEX_OF)
       .map((planet) => planet);
-
-    // if (filterByNumericValues.length === 0) {
-    //   filterData = dbStarWars.filter((planet) => planet.name
-    //     .toLowerCase().indexOf(value.toLowerCase()) !== INDEX_OF)
-    //     .map((planet) => planet);
-    // } else if (filterByNumericValues.length > 0 && dbFilterByName.length === 0) {
-    //   filterData = dbStarWars.filter((planet) => planet.name
-    //     .toLowerCase().indexOf(value.toLowerCase()) !== INDEX_OF)
-    //     .map((planet) => planet);
-    //   setDbFilterByName(filterData);
-    //   getAllFilterByNumericValues(filterByNumericValues);
-    // } else {
-    //   filterData = dbFilterByName.filter((planet) => planet.name
-    //     .toLowerCase().indexOf(value.toLowerCase()) !== INDEX_OF)
-    //     .map((planet) => planet);
-    // }
 
     setDbFilterByName(filterData);
     setLoading(false);
@@ -143,7 +128,6 @@ function StarWarsProvider({ children }) {
 
   function getFilterByNumericValues() {
     setLoading(true);
-    const filterDataNumeric = [...filterByNumericValues];
     if (filterByNumericValues.length > 0) {
       const found = filterByNumericValues.find((elem) => elem.column === column);
       if (found) {
@@ -151,52 +135,46 @@ function StarWarsProvider({ children }) {
           if (filter.column === column) {
             setFilterByNumericValues(
               [filterByNumericValues[ind] = { column, comparison, valueNumber }],
-              filterDataNumeric[ind] = { column, comparison, valueNumber },
             );
           }
         });
       } else {
         setFilterByNumericValues([...filterByNumericValues,
           { column, comparison, valueNumber }]);
-        filterDataNumeric.push(...filterByNumericValues,
-          { column, comparison, valueNumber });
       }
     } else {
       setFilterByNumericValues([...filterByNumericValues,
         { column, comparison, valueNumber }]);
-      filterDataNumeric.push(...filterByNumericValues,
-        { column, comparison, valueNumber });
     }
-
-    getAllFilterByNumericValues(filterDataNumeric);
     setLoading(false);
   }
 
   function removeFilterByNumericValues({ target }) {
     const { value } = target;
-    filterByNumericValues.splice(value, 1);
-    if (filterByNumericValues.length === 0) {
+    const filters = [...filterByNumericValues];
+    filters.splice(value, 1);
+    setFilterByNumericValues(filters);
+    if (filters.length === 0) {
       setColumn('population');
       setComparison('maior que');
       setValueNumber(0);
-      filterDataByName(filterByName);
-    } else {
-      getAllFilterByNumericValues(filterByNumericValues);
+      filterDataByName();
     }
   }
 
   function removeAllFilterByNumericValues() {
-    filterByNumericValues.splice(0, filterByNumericValues.length);
+    const filters = [...filterByNumericValues];
+    filters.splice(0, filters.length);
+    setFilterByNumericValues(filters);
     setColumn('population');
     setComparison('maior que');
     setValueNumber(0);
-    filterDataByName(filterByName);
+    filterDataByName();
   }
 
   function getFilterByName({ target }) {
     const { value } = target;
     setFilterByName(value);
-    filterDataByName(value);
   }
 
   const contexValue = {
@@ -209,6 +187,7 @@ function StarWarsProvider({ children }) {
     valueNumber,
     dbTitleFilms,
     filterByNumericValues,
+    getAllFilterByNumericValues,
     requestFilmsStarWarsData,
     requestStarWarsData,
     filterDataByName,
